@@ -92,4 +92,3 @@ tar -zxvf grafana-7.5.2.linux-amd64.tar.gz
 ```
 
 Grafana 默认使用 3000 端口启动，浏览器访问：`http://localhost:3000` 查看对应页面
-# ebpf-moniter

@@ -235,15 +235,15 @@ def print_ipv4_event(cpu, data, size):
         inet_ntop(AF_INET, pack("I", event.saddr)),
         inet_ntop(AF_INET, pack("I", event.daddr)), event.dport,
         float(event.delta_us) / 1000))
-    
-    tcpconnlat_gauge.labels(
-        PID = event.pid,
-        COMM = event.task.decode('utf-8', 'replace'),
-        IP = event.ip,
-        SADDR = inet_ntop(AF_INET, pack("I", event.saddr)),
-        DADDR = inet_ntop(AF_INET, pack("I", event.daddr)),
-        DPORT = event.dport,
-    ).set(float(event.delta_us) / 1000)
+    if (inet_ntop(AF_INET,pack("I", event.saddr)) != "127.0.0.1") or (inet_ntop(AF_INET, pack("I", event.daddr)) != "127.0.0.1"):
+        tcpconnlat_gauge.labels(
+            PID = event.pid,
+            COMM = event.task.decode('utf-8', 'replace'),
+            IP = event.ip,
+            SADDR = inet_ntop(AF_INET, pack("I", event.saddr)),
+            DADDR = inet_ntop(AF_INET, pack("I", event.daddr)),
+            DPORT = event.dport,
+        ).set(float(event.delta_us) / 1000)
     
 
 def print_ipv6_event(cpu, data, size):

@@ -368,14 +368,15 @@ def print_ipv4_event(cpu, data, size):
         print(" %-12s %s" % (tcpstate[event.state], event.seq))
     else:
         print(" %s" % (tcpstate[event.state]))
-    tcpconnlat_gauge.labels(
-        TIME = strftime("%H:%M:%S"),
-        PID = event.pid,
-        IP = event.ip,
-        T = type[event.type],
-        LADDRLPORT = "%s:%d" % (inet_ntop(AF_INET, pack('I', event.saddr)), event.lport),
-        RADDRRPORT = "%s:%s" % (inet_ntop(AF_INET, pack('I', event.daddr)), event.dport),
-    ).set(1)
+    if (inet_ntop(AF_INET,pack('I', event.saddr)) != "127.0.0.1") or (inet_ntop(AF_INET,pack('I', event.daddr)) != "127.0.0.1"):
+        tcpconnlat_gauge.labels(
+            TIME = strftime("%H:%M:%S"),
+            PID = event.pid,
+            IP = event.ip,
+            T = type[event.type],
+            LADDRLPORT = "%s:%d" % (inet_ntop(AF_INET, pack('I', event.saddr)), event.lport),
+            RADDRRPORT = "%s:%s" % (inet_ntop(AF_INET, pack('I', event.daddr)), event.dport),
+        ).set(1)
 
 def print_ipv6_event(cpu, data, size):
     event = b["ipv6_events"].event(data)

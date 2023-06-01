@@ -74,13 +74,13 @@ def ip_to_str(addr):
 
 def handle_event(cpu, data, size):
     event = b["events"].event(data)
-
-    tcp_rtt_gauge.labels(
-        src_ip=ip_to_str(event.src_ip),
-        dest_ip=ip_to_str(event.dest_ip),
-        src_port=event.src_port,
-        dest_port=event.dest_port,
-    ).set(event.rtt_ns)
+    if (ip_to_str(event.src_ip) != "127.0.0.1" or ip_to_str(event.dest_ip) != "127.0.0.1"):
+        tcp_rtt_gauge.labels(
+            src_ip=ip_to_str(event.src_ip),
+            dest_ip=ip_to_str(event.dest_ip),
+            src_port=event.src_port,
+            dest_port=event.dest_port,
+        ).set(event.rtt_ns)
 
 
 b["events"].open_perf_buffer(handle_event)
